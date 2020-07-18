@@ -49,7 +49,7 @@ script:
 jobs:
   include:
     - stage: test
-      php: 7.2
+      php: 7.2.32
       env: DB=mariadb
       addons:
         mariadb: '10.2'
