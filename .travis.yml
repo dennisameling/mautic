@@ -41,8 +41,8 @@ install:
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]; then pecl install pcov && composer require --dev pcov/clobber && bin/pcov clobber; fi
 
 script:
-  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist app/bundles/PageBundle/Tests/Controller/PageControllerTest.php
-  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist plugins/MauticCrmBundle/Tests/Pipedrive/Controller/PipedriveControllerTest.php
+  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist app/bundles/PageBundle/Tests/Controller/PageControllerTest.php || travis_terminate 1;
+  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist plugins/MauticCrmBundle/Tests/Pipedrive/Controller/PipedriveControllerTest.php || travis_terminate 1;
 
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]; 
     then composer test -- --coverage-clover=coverage.xml && bash <(curl -s https://codecov.io/bash); 
