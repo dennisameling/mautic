@@ -9,8 +9,6 @@ notifications:
     on_success: never
 
 php:
-  #- 7.2.32
-  #- 7.3
   - 7.4
 
 cache:
@@ -52,7 +50,7 @@ script:
 
 jobs:
   include:
-    #- stage: test
+    - stage: test
     #  php: 7.2.32
     #  env: DB=mariadb
     #  addons:
