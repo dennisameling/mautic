@@ -9,8 +9,8 @@ notifications:
     on_success: never
 
 php:
-  - 7.2.32
-  - 7.3
+  #- 7.2.32
+  #- 7.3
   - 7.4
 
 cache:
@@ -43,22 +43,25 @@ install:
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]; then pecl install pcov && composer require --dev pcov/clobber && bin/pcov clobber; fi
 
 script:
+  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist app/bundles/PageBundle/Tests/Controller/PageControllerTest.php
+  - bin/phpunit --bootstrap vendor/autoload.php --configuration app/phpunit.xml.dist plugins/MauticCrmBundle/Tests/Pipedrive/Controller/PipedriveControllerTest.php
+
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]; 
     then composer test -- --coverage-clover=coverage.xml && bash <(curl -s https://codecov.io/bash); 
     else composer test; fi
 
 jobs:
   include:
-    - stage: test
-      php: 7.2.32
-      env: DB=mariadb
-      addons:
-        mariadb: '10.2'
-    - 
-      php: 7.3
-      env: DB=mariadb
-      addons:
-        mariadb: '10.2'
+    #- stage: test
+    #  php: 7.2.32
+    #  env: DB=mariadb
+    #  addons:
+    #    mariadb: '10.2'
+    #- 
+    #  php: 7.3
+    #  env: DB=mariadb
+    #  addons:
+    #    mariadb: '10.2'
     - 
       name: PHPSTAN
       script: composer phpstan
