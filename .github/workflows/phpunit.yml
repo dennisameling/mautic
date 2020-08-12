@@ -37,12 +37,6 @@ jobs:
         php-version: ${{ matrix.php-versions }}
         extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
         #coverage: xdebug #optional
-
-    - name: Start mysql service
-      run: sudo /etc/init.d/mysql start
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v2
     
     - name: Set SYMFONY_ENV to test
       run: echo "::set-env name=SYMFONY_ENV::test"
