@@ -65,4 +65,5 @@ jobs:
     
     - name: Run tests
       run: composer test
-      DB_PORT: ${{ job.services.mysql.ports[3306] }}
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
