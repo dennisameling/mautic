@@ -37,6 +37,9 @@ jobs:
 
     - name: Start mysql service
       run: sudo /etc/init.d/mysql start
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v2
     
     - name: Set SYMFONY_ENV to test
       run: echo "::set-env name=SYMFONY_ENV::test"
