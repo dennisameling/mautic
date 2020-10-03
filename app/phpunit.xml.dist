@@ -14,11 +14,10 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>bundles/*Bundle/Tests</directory>
-            <exclude>bundles/LeadBundle/Tests</exclude>
-        </testsuite>
-        <testsuite name="Plugin tests">
-            <directory>./../plugins/*Bundle/Tests</directory>
+            <directory>bundles/LeadBundle/Tests</directory>
+            <directory>bundles/PageBundle/Tests</directory>
+            <exclude>bundles/LeadBundle/Tests/Controller</exclude>
+            <exclude>bundles/LeadBundle/Tests/Model</exclude>
         </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
