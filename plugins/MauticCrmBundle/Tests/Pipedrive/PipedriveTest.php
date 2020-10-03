@@ -20,25 +20,6 @@ abstract class PipedriveTest extends MauticMysqlTestCase
     const WEBHOOK_USER     = 'user';
     const WEBHOOK_PASSWORD = 'pa$$word';
 
-    protected function setUp()
-    {
-        // Simulate request.
-        $GLOBALS['requests']        = [];
-        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $_SERVER['SERVER_PORT']     = 80;
-        $_SERVER['SERVER_NAME']     = 'www.example.com';
-        $_SERVER['REQUEST_URI']     = '/index.php';
-
-        parent::setUp();
-    }
-
-    public function tearDown()
-    {
-        unset($GLOBALS['requests'], $_SERVER['SERVER_PROTOCOL'], $_SERVER['SERVER_PORT'], $_SERVER['SERVER_NAME']);
-
-        parent::tearDown();
-    }
-
     /**
      * @param $type
      *
