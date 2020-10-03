@@ -18,6 +18,9 @@
             <directory>bundles/PageBundle/Tests</directory>
             <exclude>bundles/LeadBundle/Tests/Controller</exclude>
             <exclude>bundles/LeadBundle/Tests/Model</exclude>
+            <exclude>bundles/LeadBundle/Tests/DataFixtures</exclude>
+            <exclude>bundles/LeadBundle/Tests/Deduplicate</exclude>
+            <exclude>bundles/LeadBundle/Tests/Entity</exclude>
         </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
