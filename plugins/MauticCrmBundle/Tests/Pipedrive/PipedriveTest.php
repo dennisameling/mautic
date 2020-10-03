@@ -14,29 +14,23 @@ use Mautic\UserBundle\Entity\Role;
 use Mautic\UserBundle\Entity\User;
 use MauticPlugin\MauticCrmBundle\Entity\PipedriveOwner;
 use MauticPlugin\MauticCrmBundle\Integration\PipedriveIntegration;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 abstract class PipedriveTest extends MauticMysqlTestCase
 {
     const WEBHOOK_USER     = 'user';
     const WEBHOOK_PASSWORD = 'pa$$word';
 
+    /**
+     * @var Client
+     */
+    protected $customClient;
+
     protected function setUp()
     {
         parent::setUp();
 
-        // Simulate request.
-        $GLOBALS['requests']        = [];
-        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $_SERVER['SERVER_PORT']     = 80;
-        $_SERVER['SERVER_NAME']     = 'www.example.com';
-        $_SERVER['REQUEST_URI']     = '/index.php';
-    }
-
-    public function tearDown()
-    {
-        unset($GLOBALS['requests'], $_SERVER['SERVER_PROTOCOL'], $_SERVER['SERVER_PORT'], $_SERVER['SERVER_NAME']);
-
-        parent::tearDown();
+        $this->customClient = static::createClient();
     }
 
     /**
@@ -66,7 +60,7 @@ abstract class PipedriveTest extends MauticMysqlTestCase
             'PHP_AUTH_PW'   => self::WEBHOOK_PASSWORD,
         ];
 
-        $this->client->request($method, '/plugin/pipedrive/webhook', [], [], $headers, $json);
+        $this->customClient->request($method, '/plugin/pipedrive/webhook', [], [], $headers, $json);
     }
 
     protected function installPipedriveIntegration($published = false, array $settings = [], array $apiKeys = ['url' => '', 'token' => ''], array $features = ['push_lead'], $addCredential = true)
