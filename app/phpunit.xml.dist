@@ -25,6 +25,9 @@
             <exclude>bundles/LeadBundle/Tests/Form</exclude>
             <exclude>bundles/LeadBundle/Tests/Helper</exclude>
             <exclude>bundles/LeadBundle/Tests/Model</exclude>
+            <exclude>bundles/LeadBundle/Tests/Report</exclude>
+            <exclude>bundles/LeadBundle/Tests/Segment</exclude>
+            <exclude>bundles/LeadBundle/Tests/Templating</exclude>
         </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
