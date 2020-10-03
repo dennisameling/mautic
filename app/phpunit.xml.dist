@@ -17,6 +17,9 @@
             <directory>bundles/*Bundle/Tests</directory>
             <exclude>bundles/LeadBundle/Tests</exclude>
         </testsuite>
+        <testsuite name="Plugin tests">
+            <directory>./../plugins/*Bundle/Tests</directory>
+        </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
         </testsuite>
