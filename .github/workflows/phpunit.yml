@@ -55,7 +55,9 @@ jobs:
 
     - name: Install dependencies
     #  if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: |
+        composer global require hirak/prestissimo
+        composer install --prefer-dist --no-progress --no-suggest
     
     - name: Run tests
       run: composer test
