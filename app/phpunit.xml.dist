@@ -19,7 +19,6 @@
             <exclude>bundles/LeadBundle/Tests/Segment/Decorator</exclude>
             <exclude>bundles/LeadBundle/Tests/Segment/DoNotContact</exclude>
             <exclude>bundles/LeadBundle/Tests/Segment/IntegrationCampaign</exclude>
-            <exclude>bundles/LeadBundle/Tests/Segment/ContactSegmentServiceFunctionalTest.php</exclude>
         </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
