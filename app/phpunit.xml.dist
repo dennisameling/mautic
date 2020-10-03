@@ -14,6 +14,9 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
+            <directory>bundles/CampaignBundle/Tests</directory>
+            <directory>bundles/CoreBundle/Tests</directory>
+            <directory>bundles/DashboardBundle/Tests</directory>
             <directory>bundles/EmailBundle/Tests</directory>
             <directory>bundles/PageBundle/Tests</directory>
         </testsuite>
