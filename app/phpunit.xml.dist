@@ -17,10 +17,14 @@
             <directory>bundles/LeadBundle/Tests</directory>
             <directory>bundles/PageBundle/Tests</directory>
             <exclude>bundles/LeadBundle/Tests/Controller</exclude>
-            <exclude>bundles/LeadBundle/Tests/Model</exclude>
             <exclude>bundles/LeadBundle/Tests/DataFixtures</exclude>
             <exclude>bundles/LeadBundle/Tests/Deduplicate</exclude>
             <exclude>bundles/LeadBundle/Tests/Entity</exclude>
+            <exclude>bundles/LeadBundle/Tests/Event</exclude>
+            <exclude>bundles/LeadBundle/Tests/EventListener</exclude>
+            <exclude>bundles/LeadBundle/Tests/Form</exclude>
+            <exclude>bundles/LeadBundle/Tests/Helper</exclude>
+            <exclude>bundles/LeadBundle/Tests/Model</exclude>
         </testsuite>
         <testsuite name="Middleware tests">
             <directory>middlewares/Tests</directory>
