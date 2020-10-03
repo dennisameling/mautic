@@ -201,11 +201,9 @@ class ContactSegmentServiceFunctionalTest extends MauticWebTestCase
         );
     }
 
-    public function testSegmentRebuildCommand()
+    /*public function testSegmentRebuildCommand()
     {
-        $this->markTestSkipped('Skipping temporarily for debugging.');
-
-        /** @var ContactSegmentService $contactSegmentService */
+        /** @var ContactSegmentService $contactSegmentService
         $contactSegmentService = $this->container->get('mautic.lead.model.lead_segment_service');
         $segmentTest3Ref       = $this->fixtures->getReference('segment-test-3');
 
@@ -237,5 +235,5 @@ class ContactSegmentServiceFunctionalTest extends MauticWebTestCase
             $segmentContacts[$segmentTest3Ref->getId()]['count'],
             'There should be no contacts in the segment-test-3 segment after removing contact titles and rebuilding from the command line.'
         );
-    }
+    }*/
 }
