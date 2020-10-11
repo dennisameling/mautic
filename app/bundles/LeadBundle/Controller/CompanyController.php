@@ -246,7 +246,7 @@ class CompanyController extends FormController
                     $this->addFlash(
                         'mautic.core.notice.created',
                         [
-                            '%name%'      => $entity->getName(),
+                            '%name%'      => str_replace(['<', '&lt;', '>', '&gt;'], ['[', '[', ']', ']'], $entity->getName()),
                             '%menu_link%' => 'mautic_company_index',
                             '%url%'       => $this->generateUrl(
                                 'mautic_company_action',
@@ -421,7 +421,7 @@ class CompanyController extends FormController
                     $this->addFlash(
                         'mautic.core.notice.updated',
                         [
-                            '%name%'      => $entity->getName(),
+                            '%name%'      => str_replace(['<', '&lt;', '>', '&gt;'], ['[', '[', ']', ']'], $entity->getName()),
                             '%menu_link%' => 'mautic_company_index',
                             '%url%'       => $this->generateUrl(
                                 'mautic_company_action',
@@ -735,7 +735,7 @@ class CompanyController extends FormController
                 'type'    => 'notice',
                 'msg'     => 'mautic.core.notice.deleted',
                 'msgVars' => [
-                    '%name%' => $entity->getName(),
+                    '%name%' => str_replace(['<', '&lt;', '>', '&gt;'], ['[', '[', ']', ']'], $entity->getName()),
                     '%id%'   => $objectId,
                 ],
             ];

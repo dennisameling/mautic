@@ -13,7 +13,7 @@
 <div class="page-header">
     <div class="box-layout">
         <div class="col-xs-5 col-sm-6 col-md-5 va-m">
-            <h3 class="pull-left"><?php $view['slots']->output('headerTitle'); ?></h3>
+            <h3 class="pull-left"><?php echo str_replace(['<', '&lt;', '>', '&gt;'], ['[', '[', ']', ']'], $view['slots']->get('headerTitle')); ?></h3>
             <div class="col-xs-2 text-right pull-left">
                 <?php $view['slots']->output('publishStatus'); ?>
             </div>

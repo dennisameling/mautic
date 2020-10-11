@@ -94,7 +94,7 @@ class AjaxController extends CommonAjaxController
             $this->addFlash(
                 'mautic.core.notice.updated',
                 [
-                    '%name%'      => $entity->getTitle(),
+                    '%name%'      => str_replace(['<', '&lt;', '>', '&gt;'], ['[', '[', ']', ']'], $entity->getTitle()),
                     '%menu_link%' => 'mautic_'.$source.'_index',
                     '%url%'       => $this->generateUrl(
                         'mautic_'.$source.'_action',
