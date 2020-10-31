@@ -32,7 +32,9 @@ jobs:
     - name: Build release files
       run: |
         php build/package_release.php -b=${{ env.MAUTIC_VERSION }}
-        echo "MAUTIC_SHA1_CONTENTS=$(cat build/packages/build-sha1-all)" >> $GITHUB_ENV
+        echo 'MAUTIC_SHA1_CONTENTS<<EOF' >> $GITHUB_ENV
+        cat build/packages/build-sha1-all >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
 
     - name: "Prerelease or not?"
       run: |
