@@ -127,8 +127,8 @@ jobs:
 
     - name: Download full installation package from previous step
       uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.MAUTIC_VERSION }}.zip
+      with:
+        name: ${{ env.MAUTIC_VERSION }}.zip
 
     - name: Install Mautic
       run: |
@@ -168,9 +168,9 @@ jobs:
     
     - name: "Download update package artifact ${{ env.MAUTIC_VERSION }}-update.zip"
       uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.MAUTIC_VERSION }}-update.zip
-          path: ./mautic-testing
+      with:
+        name: ${{ env.MAUTIC_VERSION }}-update.zip
+        path: ./mautic-testing
 
     - name: "Attempt update from ${{ env.MAUTIC_MINIMUM_VERISON }} to ${{ env.MAUTIC_VERSION }}"
       working-directory: ./mautic-testing
