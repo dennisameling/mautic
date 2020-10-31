@@ -131,8 +131,10 @@ jobs:
         name: ${{ env.MAUTIC_VERSION }}.zip
 
     - name: Install Mautic
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: |
-        unzip ${{ env.MAUTIC_VERSION }}.zip -d ./mautic-testing
+        unzip -q ${{ env.MAUTIC_VERSION }}.zip -d ./mautic-testing
         cp ./.github/ci-files/local.php ./mautic-testing/app/config/local.php
         cd ./mautic-testing
         php bin/console mautic:install http://localhost
@@ -141,6 +143,16 @@ jobs:
     name: Test updating from previous version
     needs: release
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: mautictest
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       # We need this so we can get the local.php override file
@@ -158,10 +170,12 @@ jobs:
         php-version: ${{ env.MAUTIC_PHP_MINIMUM_VERSION }}
         extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
 
-    - name: "Download and install minimum Mautic version: ${{ env.MAUTIC_MINIMUM_VERISON }}"
+    - name: "Download and install minimum Mautic version: ${{ env.MAUTIC_MINIMUM_VERSION }}"
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: |
-        curl -sSL https://github.com/mautic/mautic/releases/download/${{ env.MAUTIC_MINIMUM_VERISON }}/${{ env.MAUTIC_MINIMUM_VERISON }}.zip -o ${{ env.MAUTIC_MINIMUM_VERISON }}.zip
-        unzip ${{ env.MAUTIC_MINIMUM_VERISON }}.zip -d ./mautic-testing
+        curl -sSL https://github.com/mautic/mautic/releases/download/${{ env.MAUTIC_MINIMUM_VERSION }}/${{ env.MAUTIC_MINIMUM_VERSION }}.zip -o ${{ env.MAUTIC_MINIMUM_VERSION }}.zip
+        unzip -q ${{ env.MAUTIC_MINIMUM_VERSION }}.zip -d ./mautic-testing
         cp ./.github/ci-files/local.php ./mautic-testing/app/config/local.php
         cd ./mautic-testing
         php bin/console mautic:install http://localhost
@@ -172,7 +186,9 @@ jobs:
         name: ${{ env.MAUTIC_VERSION }}-update.zip
         path: ./mautic-testing
 
-    - name: "Attempt update from ${{ env.MAUTIC_MINIMUM_VERISON }} to ${{ env.MAUTIC_VERSION }}"
+    - name: "Attempt update from ${{ env.MAUTIC_MINIMUM_VERSION }} to ${{ env.MAUTIC_VERSION }}"
+      env:
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       working-directory: ./mautic-testing
       run: |
         php bin/console mautic:update:apply --force --update-package=${{ env.MAUTIC_VERSION }}-update.zip
