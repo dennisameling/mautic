@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: Create draft release ${{ github.ref }}
+    name: Create draft release ${{ github.event.release.tag_name }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,11 +27,13 @@ jobs:
 
     - name: Build release files
       run: |
-        php build/package_release.php -b=${{ github.ref }}
+        php build/package_release.php -b=${{ github.event.release.tag_name }}
+        echo "MAUTIC_SHA1_CONTENTS=$(cat build/packages/build-sha1-all)" >> $GITHUB_ENV
 
     - name: "Prerelease or not?"
       run: |
         STABILITY=$(jq -r '.stability' app/release_metadata.json)
+
         if [[ "${STABILITY}" == 'stable' ]]; then
           PRERELEASE=false
         else
@@ -46,31 +48,31 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Mautic Community ${{ github.ref }}
+        tag_name: ${{ github.event.release.tag_name }}
+        release_name: Mautic Community ${{ github.event.release.tag_name }}
         draft: true
         prerelease: ${{ env.IS_PRERELEASE }}
         body: |
           TODO add release notes here!
 
-          $(cat build/packages/build-sha1-all)
+          ${{ env.MAUTIC_SHA1_CONTENTS }}
 
-    - name: Upload full package ${{ github.ref }}.zip
+    - name: Upload full package ${{ github.event.release.tag_name }}.zip
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/packages/${{ github.ref }}.zip
-        asset_name: ${{ github.ref }}.zip
+        asset_path: ./build/packages/${{ github.event.release.tag_name }}.zip
+        asset_name: ${{ github.event.release.tag_name }}.zip
         asset_content_type: application/zip
 
-    - name: Upload update package ${{ github.ref }}-update.zip
+    - name: Upload update package ${{ github.event.release.tag_name }}-update.zip
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/packages/${{ github.ref }}-update.zip
-        asset_name: ${{ github.ref }}-update.zip
+        asset_path: ./build/packages/${{ github.event.release.tag_name }}-update.zip
+        asset_name: ${{ github.event.release.tag_name }}-update.zip
         asset_content_type: application/zip
