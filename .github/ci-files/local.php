@@ -11,5 +11,7 @@ $parameters = [
 	'db_port'               => getenv('DB_PORT'),
 	'db_name'               => 'mautictest',
 	'db_user'               => 'root',
-	'db_password'           => ''
+    'db_password'           => '',
+    'admin_email'           => 'github-actions@mautic.org',
+	'admin_password'        => 'GitHubActionsIsAwesome',
 ];
