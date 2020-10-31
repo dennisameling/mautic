@@ -17,12 +17,11 @@ jobs:
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.3
+        php-version: 7.4
         extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
 
     - name: Get tag name
-      run: |
-        echo "MAUTIC_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      run: echo "MAUTIC_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
     - name: Install dependencies
       # Force Composer to v1.10
@@ -86,8 +85,95 @@ jobs:
         asset_name: ${{ env.MAUTIC_VERSION }}-update.zip
         asset_content_type: application/zip
 
-    - name: Archive ZIP artifacts
+    - name: Store full package artifact
       uses: actions/upload-artifact@v2
       with:
-        name: mautic-zip-files
-        path: build/packages/*.zip
+        name: ${{ env.MAUTIC_VERSION }}.zip
+        path: ./build/packages/${{ env.MAUTIC_VERSION }}.zip
+
+    - name: Store update package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.MAUTIC_VERSION }}-update.zip
+        path: ./build/packages/${{ env.MAUTIC_VERSION }}-update.zip
+
+  test-fresh-install:
+    name: Test a fresh installation
+    needs: release
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: mautictest
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    # We need this so we can get the local.php override file
+    - uses: actions/checkout@v2
+
+    - name: Get tag name
+      run: echo "MAUTIC_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
+
+    - name: Download full installation package from previous step
+      uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.MAUTIC_VERSION }}.zip
+
+    - name: Install Mautic
+      run: |
+        unzip ${{ env.MAUTIC_VERSION }}.zip -d ./mautic-testing
+        cp ./.github/ci-files/local.php ./mautic-testing/app/config/local.php
+        cd ./mautic-testing
+        php bin/console mautic:install http://localhost
+
+  test-update-install:
+    name: Test updating from previous version
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      # We need this so we can get the local.php override file
+    - uses: actions/checkout@v2
+
+    - name: Get tag name and minimum Mautic version
+      run: |
+        echo "MAUTIC_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        echo "MAUTIC_MINIMUM_VERSION=$(jq -r '.minimum_mautic_version' app/release_metadata.json)" >> $GITHUB_ENV
+        echo "MAUTIC_PHP_MINIMUM_VERSION=$(jq -r '.minimum_php_version' app/release_metadata.json)" >> $GITHUB_ENV
+
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.MAUTIC_PHP_MINIMUM_VERSION }}
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
+
+    - name: "Download and install minimum Mautic version: ${{ env.MAUTIC_MINIMUM_VERISON }}"
+      run: |
+        curl -sSL https://github.com/mautic/mautic/releases/download/${{ env.MAUTIC_MINIMUM_VERISON }}/${{ env.MAUTIC_MINIMUM_VERISON }}.zip -o ${{ env.MAUTIC_MINIMUM_VERISON }}.zip
+        unzip ${{ env.MAUTIC_MINIMUM_VERISON }}.zip -d ./mautic-testing
+        cp ./.github/ci-files/local.php ./mautic-testing/app/config/local.php
+        cd ./mautic-testing
+        php bin/console mautic:install http://localhost
+    
+    - name: "Download update package artifact ${{ env.MAUTIC_VERSION }}-update.zip"
+      uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.MAUTIC_VERSION }}-update.zip
+          path: ./mautic-testing
+
+    - name: "Attempt update from ${{ env.MAUTIC_MINIMUM_VERISON }} to ${{ env.MAUTIC_VERSION }}"
+      working-directory: ./mautic-testing
+      run: |
+        php bin/console mautic:update:apply --force --update-package=${{ env.MAUTIC_VERSION }}-update.zip
+        php bin/console mautic:update:apply --finish
