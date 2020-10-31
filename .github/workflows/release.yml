@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      # Our build script needs access to all previous tags, so we add fetch-depth: 0
+      with:
+        fetch-depth: 0
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -82,3 +85,9 @@ jobs:
         asset_path: ./build/packages/${{ env.MAUTIC_VERSION }}-update.zip
         asset_name: ${{ env.MAUTIC_VERSION }}-update.zip
         asset_content_type: application/zip
+
+    - name: Archive ZIP artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: mautic-zip-files
+        path: build/packages/*.zip
