@@ -880,6 +880,11 @@ return [
                 'arguments' => [
                     \Mautic\LeadBundle\Entity\Lead::class,
                 ],
+                'methodCalls' => [
+                    'setContactUniqueIdentifiersOperator' => [
+                        '%mautic.contact_unique_identifiers_operator%',
+                    ],
+                ],
             ],
             'mautic.lead.repository.frequency_rule' => [
                 'class'     => \Mautic\LeadBundle\Entity\FrequencyRuleRepository::class,
@@ -1324,5 +1329,6 @@ return [
             '5' => 'last_active',
             '6' => 'id',
         ],
+        'contact_unique_identifiers_operator' => \Doctrine\DBAL\Query\Expression\CompositeExpression::TYPE_OR,
     ],
 ];

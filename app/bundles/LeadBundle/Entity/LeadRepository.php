@@ -14,6 +14,7 @@ namespace Mautic\LeadBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Mautic\CoreBundle\Entity\CommonRepository;
 use Mautic\CoreBundle\Helper\DateTimeHelper;
@@ -53,6 +54,11 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
      * @var TriggerModel
      */
     private $triggerModel;
+
+    /**
+     * @var string
+     */
+    private $contactUniqueIdentifiersOperator;
 
     /**
      * Used by search functions to search social profiles.
@@ -219,7 +225,12 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
 
         // loop through the fields and
         foreach ($uniqueFieldsWithData as $col => $val) {
-            $q->orWhere("l.$col = :".$col)
+            $operator = 'orWhere';
+            if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
+                $operator = 'andWhere';
+            }
+
+            $q->$operator("l.$col = :".$col)
                 ->setParameter($col, $val);
         }
 
@@ -287,7 +298,12 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
 
         // loop through the fields and
         foreach ($uniqueFieldsWithData as $col => $val) {
-            $q->orWhere("l.$col = :".$col)
+            $operator = 'orWhere';
+            if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
+                $operator = 'andWhere';
+            }
+
+            $q->$operator("l.$col = :".$col)
                 ->setParameter($col, $val);
         }
 
@@ -691,7 +707,7 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
         $string                  = $filter->string;
         $unique                  = $this->generateRandomParameterName();
         $returnParameter         = false; //returning a parameter that is not used will lead to a Doctrine error
-        list($expr, $parameters) = parent::addSearchCommandWhereClause($q, $filter);
+        [$expr, $parameters]     = parent::addSearchCommandWhereClause($q, $filter);
 
         //DBAL QueryBuilder does not have an expr()->not() function; boo!!
 
@@ -1214,6 +1230,11 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
             $q->andHaving($having);
         }
         $q->groupBy('l.id');
+    }
+
+    public function setContactUniqueIdentifiersOperator(string $contactUniqueIdentifiersOperator): void
+    {
+        $this->contactUniqueIdentifiersOperator = $contactUniqueIdentifiersOperator;
     }
 
     /**
