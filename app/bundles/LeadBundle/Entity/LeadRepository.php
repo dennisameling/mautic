@@ -225,12 +225,7 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
 
         // loop through the fields and
         foreach ($uniqueFieldsWithData as $col => $val) {
-            $operator = 'orWhere';
-            if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
-                $operator = 'andWhere';
-            }
-
-            $q->$operator("l.$col = :".$col)
+            $q->{$this->getUniqueIdentifiersWherePart()}("l.$col = :".$col)
                 ->setParameter($col, $val);
         }
 
@@ -298,12 +293,7 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
 
         // loop through the fields and
         foreach ($uniqueFieldsWithData as $col => $val) {
-            $operator = 'orWhere';
-            if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
-                $operator = 'andWhere';
-            }
-
-            $q->$operator("l.$col = :".$col)
+            $q->{$this->getUniqueIdentifiersWherePart()}("l.$col = :".$col)
                 ->setParameter($col, $val);
         }
 
@@ -703,11 +693,11 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
      */
     protected function addSearchCommandWhereClause($q, $filter)
     {
-        $command                 = $filter->command;
-        $string                  = $filter->string;
-        $unique                  = $this->generateRandomParameterName();
-        $returnParameter         = false; //returning a parameter that is not used will lead to a Doctrine error
-        [$expr, $parameters]     = parent::addSearchCommandWhereClause($q, $filter);
+        $command             = $filter->command;
+        $string              = $filter->string;
+        $unique              = $this->generateRandomParameterName();
+        $returnParameter     = false; //returning a parameter that is not used will lead to a Doctrine error
+        [$expr, $parameters] = parent::addSearchCommandWhereClause($q, $filter);
 
         //DBAL QueryBuilder does not have an expr()->not() function; boo!!
 
@@ -1235,6 +1225,15 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
     public function setContactUniqueIdentifiersOperator(string $contactUniqueIdentifiersOperator): void
     {
         $this->contactUniqueIdentifiersOperator = $contactUniqueIdentifiersOperator;
+    }
+
+    private function getUniqueIdentifiersWherePart(): string
+    {
+        if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
+            return 'andWhere';
+        }
+
+        return 'orWhere';
     }
 
     /**
