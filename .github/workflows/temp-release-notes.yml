@@ -8,6 +8,10 @@ jobs:
     name: Create draft release
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+      # Our build script needs access to all previous tags, so we add fetch-depth: 0
+      with:
+        fetch-depth: 0
     - name: test
       run: |
         # Version as indicated in the metadata, e.g., 3.2.5-rc
