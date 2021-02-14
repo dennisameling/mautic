@@ -8,6 +8,7 @@ jobs:
     name: Create draft release
     runs-on: ubuntu-latest
     steps:
+    - name: test
       run: |
         # Version as indicated in the metadata, e.g., 3.2.5-rc
         METADATA_VERSION=$(jq -r '.version' app/release_metadata.json)
