@@ -11,6 +11,7 @@
 
 namespace Mautic\LeadBundle\Entity;
 
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Mautic\LeadBundle\Helper\CustomFieldHelper;
 
@@ -37,7 +38,7 @@ trait CustomFieldRepositoryTrait
      */
     public function getEntitiesWithCustomFields($object, $args, $resultsCallback = null)
     {
-        list($fields, $fixedFields) = $this->getCustomFieldList($object);
+        [$fields, $fixedFields] = $this->getCustomFieldList($object);
 
         //Fix arguments if necessary
         $args = $this->convertOrmProperties($this->getClassName(), $args);
@@ -304,7 +305,7 @@ trait CustomFieldRepositoryTrait
      */
     protected function formatFieldValues($values, $byGroup = true, $object = 'lead')
     {
-        list($fields, $fixedFields) = $this->getCustomFieldList($object);
+        [$fields, $fixedFields] = $this->getCustomFieldList($object);
 
         $this->removeNonFieldColumns($values, $fixedFields);
 
