@@ -24,6 +24,11 @@ trait CustomFieldRepositoryTrait
     protected $customFieldList = [];
 
     /**
+     * @var string
+     */
+    protected $uniqueIdentifiersOperator;
+
+    /**
      * @param      $object
      * @param      $args
      * @param null $resultsCallback
@@ -418,5 +423,19 @@ trait CustomFieldRepositoryTrait
     protected function postSaveEntity($entity)
     {
         // Inherit and use if required
+    }
+
+    public function setUniqueIdentifiersOperator(string $uniqueIdentifiersOperator): void
+    {
+        $this->uniqueIdentifiersOperator = $uniqueIdentifiersOperator;
+    }
+
+    public function getUniqueIdentifiersWherePart(): string
+    {
+        if (CompositeExpression::TYPE_AND == $this->uniqueIdentifiersOperator) {
+            return 'andWhere';
+        }
+
+        return 'orWhere';
     }
 }

@@ -881,7 +881,7 @@ return [
                     \Mautic\LeadBundle\Entity\Lead::class,
                 ],
                 'methodCalls' => [
-                    'setContactUniqueIdentifiersOperator' => [
+                    'setUniqueIdentifiersOperator' => [
                         '%mautic.contact_unique_identifiers_operator%',
                     ],
                 ],

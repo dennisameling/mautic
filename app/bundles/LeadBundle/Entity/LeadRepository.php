@@ -56,11 +56,6 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
     private $triggerModel;
 
     /**
-     * @var string
-     */
-    private $contactUniqueIdentifiersOperator;
-
-    /**
      * Used by search functions to search social profiles.
      */
     public function setAvailableSocialFields(array $fields)
@@ -1220,20 +1215,6 @@ class LeadRepository extends CommonRepository implements CustomFieldRepositoryIn
             $q->andHaving($having);
         }
         $q->groupBy('l.id');
-    }
-
-    public function setContactUniqueIdentifiersOperator(string $contactUniqueIdentifiersOperator): void
-    {
-        $this->contactUniqueIdentifiersOperator = $contactUniqueIdentifiersOperator;
-    }
-
-    private function getUniqueIdentifiersWherePart(): string
-    {
-        if (CompositeExpression::TYPE_AND == $this->contactUniqueIdentifiersOperator) {
-            return 'andWhere';
-        }
-
-        return 'orWhere';
     }
 
     /**
