@@ -225,7 +225,7 @@ class LeadRepositoryTest extends \PHPUnit\Framework\TestCase
         $mockMetadata = $this->createMock(ClassMetadata::class);
 
         $leadRepository = new LeadRepository($mockEm, $mockMetadata);
-        $leadRepository->setContactUniqueIdentifiersOperator(CompositeExpression::TYPE_AND);
+        $leadRepository->setUniqueIdentifiersOperator(CompositeExpression::TYPE_AND);
 
         $reflection = new \ReflectionClass(LeadRepository::class);
         $refMethod  = $reflection->getMethod('getUniqueIdentifiersWherePart');
@@ -233,7 +233,7 @@ class LeadRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('andWhere', $refMethod->invoke($leadRepository));
 
-        $leadRepository->setContactUniqueIdentifiersOperator(CompositeExpression::TYPE_OR);
+        $leadRepository->setUniqueIdentifiersOperator(CompositeExpression::TYPE_OR);
 
         $this->assertEquals('orWhere', $refMethod->invoke($leadRepository));
     }
