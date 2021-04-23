@@ -12,8 +12,8 @@
 namespace Mautic\LeadBundle\Tests\Entity;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;

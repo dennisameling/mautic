@@ -1453,6 +1453,6 @@ return [
             '6' => 'id',
         ],
         \Mautic\LeadBundle\Field\Settings\BackgroundSettings::CREATE_CUSTOM_FIELD_IN_BACKGROUND => false,
-        'contact_unique_identifiers_operator' => \Doctrine\DBAL\Query\Expression\CompositeExpression::TYPE_OR,
+        'contact_unique_identifiers_operator'                                                   => \Doctrine\DBAL\Query\Expression\CompositeExpression::TYPE_OR,
     ],
 ];
