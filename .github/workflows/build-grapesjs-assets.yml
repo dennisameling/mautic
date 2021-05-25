@@ -30,7 +30,7 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
-        path: 'Assets/library/js/dist'
+        path: 'plugins/GrapesJsBuilderBundle/Assets/library/js/dist'
         commit-message: 'Auto-update GrapesJS generated JS dist files'
         title: 'Update GrapesJS generated JS dist files'
         delete-branch: true
